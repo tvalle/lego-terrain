@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8f5" />
+    <meta name="description" content="Sculpt your own little world, one LEGO brick at a time. A 3D terrain editor with real-sized bricks, plates, and slopes." />
+    <title>Brickscape — A little world, built by you</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232d644e'/%3E%3Cpath d='M14 26l18-9 18 9v20l-18 9-18-9z' fill='%23e7f0b0'/%3E%3Cpath d='M14 26l18 10 18-10M32 36v19' fill='none' stroke='%232d644e' stroke-width='3'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <a class="brand" href="./" aria-label="Brickscape home"><span class="brand-mark"><i data-lucide="blocks"></i></span><span>brickscape<span class="brand-dot">.</span></span></a>
+        <div class="header-divider"></div><span class="project-label">Your terrain workshop <span class="version">BETA</span></span>
+        <div class="header-actions">
+          <button id="help" class="icon-button" aria-label="Help and keyboard shortcuts" title="Help and keyboard shortcuts"><i data-lucide="circle-help"></i></button>
+          <button id="load" class="button quiet"><i data-lucide="folder-open"></i><span>Open</span></button>
+          <button id="save" class="button primary"><i data-lucide="download"></i><span>Save project</span></button>
+          <input id="file-input" type="file" accept=".json,application/json" hidden />
+        </div>
+      </header>
+      <main class="workspace">
+        <section class="scene-panel" aria-label="3D terrain workspace">
+          <div class="scene-heading"><div><div class="eyebrow">A LITTLE WORLD, BUILT BY YOU</div><h1>Untitled terrain <span class="saved-dot" title="Autosaved on this device"></span></h1></div><span class="board-tag"><i data-lucide="grid-2x2"></i><span id="board-size">32 × 32 studs</span></span></div>
+          <div id="viewport" tabindex="0" aria-label="3D terrain canvas. Left drag to sculpt; right drag to orbit; scroll to zoom."></div>
+          <div class="viewport-actions"><button id="undo" class="icon-button" aria-label="Undo" title="Undo (Ctrl/Cmd Z)" disabled><i data-lucide="undo-2"></i></button><button id="redo" class="icon-button" aria-label="Redo" title="Redo (Ctrl/Cmd Shift Z)" disabled><i data-lucide="redo-2"></i></button><span class="action-divider"></span><button id="clear" class="icon-button" aria-label="Clear terrain" title="Clear terrain (can undo)"><i data-lucide="trash-2"></i></button></div>
+          <div class="camera-tools"><button id="view-iso" class="icon-button active" aria-label="Perspective view" title="Perspective view"><i data-lucide="box"></i></button><button id="view-top" class="icon-button" aria-label="Top view" title="Top view"><i data-lucide="scan"></i></button><span class="camera-divider"></span><button id="zoom-in" class="icon-button" aria-label="Zoom in"><i data-lucide="plus"></i></button><button id="zoom-out" class="icon-button" aria-label="Zoom out"><i data-lucide="minus"></i></button><button id="view-reset" class="icon-button" aria-label="Reset camera" title="Reset camera (F)"><i data-lucide="maximize"></i></button></div>
+          <div id="empty-hint" class="empty-hint"><span class="hint-icon"><i data-lucide="mouse-pointer-2"></i></span><div><strong>Every landscape starts with a click.</strong><p>Click and drag on the baseplate to grow your terrain.</p><button id="demo" class="text-button">Or explore a sample landscape <i data-lucide="arrow-up-right"></i></button></div></div>
+          <div class="canvas-bottom"><div class="view-label"><span class="status-dot"></span><span id="view-mode">PERSPECTIVE</span><span class="view-separator">/</span><span id="cursor-position">READY TO BUILD</span></div><button id="navigate" class="button navigation-button" aria-pressed="false"><i data-lucide="hand"></i><span>Navigate</span><kbd>Space</kbd></button></div>
+          <div class="interaction-hints"><span><i data-lucide="mouse-pointer-2"></i>Drag to sculpt</span><span><kbd>Shift</kbd> Lower</span><span>Right drag to orbit</span><span>Scroll to zoom</span></div>
+        </section>
+        <aside class="sidebar" aria-label="Terrain controls">
+          <div class="sidebar-title"><span><i data-lucide="sliders-horizontal"></i>Terrain studio</span><span class="live-pill">LIVE</span></div>
+          <div class="sidebar-scroll">
+            <section class="control-section"><div class="section-heading"><h2>Sculpt tools</h2><span class="section-note">01 — 05</span></div><div class="tool-grid">
+              <button class="tool active" data-tool="raise" aria-pressed="true" title="Raise (1)"><i data-lucide="mountain"></i><span>Raise</span><kbd>1</kbd></button>
+              <button class="tool" data-tool="lower" aria-pressed="false" title="Lower (2)"><i data-lucide="arrow-down-to-line"></i><span>Lower</span><kbd>2</kbd></button>
+              <button class="tool" data-tool="smooth" aria-pressed="false" title="Smooth (3)"><i data-lucide="waves"></i><span>Smooth</span><kbd>3</kbd></button>
+              <button class="tool" data-tool="flatten" aria-pressed="false" title="Flatten (4)"><i data-lucide="align-vertical-justify-center"></i><span>Flatten</span><kbd>4</kbd></button>
+              <button class="tool paint-tool" data-tool="paint" aria-pressed="false" title="Paint (5)"><i data-lucide="paintbrush"></i><span>Paint color</span><kbd>5</kbd></button>
+            </div><p id="tool-description" class="control-description">Build up hills, one layer at a time.</p></section>
+            <section class="control-section brush-section"><div class="section-heading"><h2>Brush settings</h2><i data-lucide="circle-dashed" class="muted-icon"></i></div>
+              <label class="range-label" for="radius">Size <output id="radius-output">8 <small>studs</small></output></label><input id="radius" type="range" min="1" max="10" step="0.5" value="4" /><div class="range-ticks"><span>Precise</span><span>Broad</span></div>
+              <label class="range-label" for="strength">Strength <output id="strength-output">45<small>%</small></output></label><input id="strength" type="range" min="5" max="100" value="45" />
+              <div id="flatten-setting" hidden><label class="range-label" for="height">Target height <output id="height-output">6 <small>plates</small></output></label><input id="height" type="range" min="0" max="48" value="6" /></div>
+              <label class="switch-row compact"><span>Soft brush edges</span><input id="falloff" type="checkbox" checked role="switch" /><span class="switch-track"></span></label>
+            </section>
+            <section class="control-section"><label class="slope-card"><span class="slope-symbol"><svg viewBox="0 0 36 32" fill="none" aria-hidden="true"><path d="M5 23V8h11l15 15v5H5z" fill="currentColor" opacity=".2"/><path d="M5 23V8h11l15 15v5H5zM5 23h26M16 8v15" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 8V5h5v3" stroke="currentColor" stroke-width="1.5"/></svg></span><span class="slope-card-copy"><strong>Build with slopes</strong><small>Fit angled pieces to hillsides</small></span><input id="slopes" type="checkbox" checked role="switch" /><span class="switch-track"></span></label><div class="slope-caption">45° · 65° · 75° — automatically fitted</div><button id="cliff-demo" class="text-button cliff-demo">Try a cliff landscape <i data-lucide="arrow-up-right"></i></button></section>
+            <section class="control-section"><div class="section-heading"><h2>Terrain palette</h2><span id="color-name" class="section-note">Grass green</span></div><div id="palette" class="palette" role="group" aria-label="Terrain color"></div><p class="control-description">Choose a color for new terrain or the paint brush.</p></section>
+            <section class="control-section parts-section"><div class="section-heading"><h2>Your pieces</h2><button id="export-parts" class="text-button" title="Download parts list as CSV" aria-label="Download parts list"><i data-lucide="list"></i>List<i data-lucide="download"></i></button></div><div class="piece-totals"><div><strong id="piece-count">0</strong><span>total pieces</span></div><div><strong id="slope-count">0</strong><span>slope pieces</span></div></div><div id="inventory" class="inventory"></div><p class="parts-footnote">Plus one 32 × 32 stud baseplate</p></section>
+          </div>
+          <div class="sidebar-footer"><i data-lucide="hard-drive"></i><span id="save-status">Saved on this device</span><span class="status-dot"></span></div>
+        </aside>
+      </main>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <dialog id="help-dialog"><div class="dialog-header"><span class="brand small">Welcome to brickscape.</span><button id="close-help" class="icon-button" aria-label="Close help"><i data-lucide="x"></i></button></div><p>Sculpt a little world made entirely of bricks, plates, and slopes. Start by dragging on the baseplate.</p><dl class="shortcuts"><dt>Raise / Lower / Smooth / Flatten / Paint</dt><dd><kbd>1</kbd>–<kbd>5</kbd></dd><dt>Temporarily lower terrain</dt><dd><kbd>Shift</kbd> + drag</dd><dt>Orbit the camera</dt><dd>Right drag / <kbd>Space</kbd> + drag</dd><dt>Pan the camera</dt><dd>Middle drag</dd><dt>Zoom</dt><dd>Scroll / pinch</dd><dt>Undo / Redo</dt><dd><kbd>Ctrl/⌘ Z</kbd> / <kbd>⇧ Z</kbd></dd><dt>Reset the view</dt><dd><kbd>F</kbd></dd></dl><p class="help-note">On touch screens, use Navigate to orbit and two fingers to zoom or pan. Projects autosave in this browser; Save project downloads a portable backup.</p><p class="help-note">Models use LEGO part dimensions in LDraw units. Automatic slopes fit 45°, 65°, and 75° families to local height drops (2, 5, and 8 plates minimum). The 75° catalog family is labeled 73° by LEGO. Steeper terrain keeps supporting bricks above the slope; no piece is stretched. This editor models exterior shapes; it does not validate physical stability or part/color availability.</p><a href="https://www.ldraw.org/article/218.html" target="_blank" rel="noreferrer">Part dimensions & references ↗</a></dialog>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
